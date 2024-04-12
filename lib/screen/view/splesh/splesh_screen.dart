@@ -30,7 +30,7 @@ class _SpleshScreenState extends State<SpleshScreen> {
           Center(child: Column(mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset("assets/image/logo/logo.jpeg",height: 112.5,width: 112.5,fit: BoxFit.cover,),
+            Image.asset("assets/image/logo/logo.png",height: 112.5,width: 112.5,fit: BoxFit.cover,),
             SizedBox(height: 5,),
             Text("Sky Scrapper",style: TextStyle(fontWeight: FontWeight.bold),)
           ],),)
