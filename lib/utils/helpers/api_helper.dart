@@ -13,7 +13,7 @@ class APIHelper{
       SkyScrapperModel skyScrapperModel = SkyScrapperModel.mapToModel(json);
       return skyScrapperModel;
     }
-    return null;
+    return SkyScrapperModel();
   }
 
 

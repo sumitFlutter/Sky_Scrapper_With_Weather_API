@@ -8,6 +8,7 @@ class ThemeProvider with ChangeNotifier{
   IconData themeMode=Icons.dark_mode;
   bool pTheme=false;
   ShareHelper shareHelper=ShareHelper();
+  String bgImage="assets/image/background/light.jpeg";
   void setTheme()
   async {
     theme=!theme;
@@ -17,16 +18,19 @@ class ThemeProvider with ChangeNotifier{
     {
       mode=ThemeMode.dark;
       themeMode=Icons.light_mode;
+      bgImage="assets/image/background/dark.jpeg";
     }
     else if(pTheme==false)
     {
       mode=ThemeMode.light;
       themeMode=Icons.dark_mode;
+      bgImage="assets/image/background/light.jpeg";
     }
     else
     {
       mode=ThemeMode.light;
       themeMode=Icons.dark_mode;
+      bgImage="assets/image/background/light.jpeg";
     }
     notifyListeners();
   }
@@ -44,19 +48,20 @@ class ThemeProvider with ChangeNotifier{
     {
       mode=ThemeMode.dark;
       themeMode=Icons.light_mode;
-
+      bgImage="assets/image/background/dark.jpeg";
     }
     else if(pTheme==false)
     {
       mode=ThemeMode.light;
       themeMode=Icons.dark_mode;
+      bgImage="assets/image/background/light.jpeg";
 
     }
     else
     {
       mode=ThemeMode.light;
       themeMode=Icons.dark_mode;
-
+      bgImage="assets/image/background/light.jpeg";
     }
     notifyListeners();
   }

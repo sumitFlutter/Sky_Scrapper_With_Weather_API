@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sky_scrapper_weather_api_project/screen/provider/sky_scrapper_prrovider.dart';
 import 'package:sky_scrapper_weather_api_project/screen/provider/theme_provider.dart';
 import 'package:sky_scrapper_weather_api_project/utils/helpers/connectivity_helper.dart';
+
+import '../../provider/connectivity_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,254 +17,140 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   ConnectivityHelper connectivityHelper = ConnectivityHelper();
-  TextEditingController textEditingController=TextEditingController();
+  TextEditingController textEditingController = TextEditingController();
   SkyScrapperProvider? providerR;
   SkyScrapperProvider? providerW;
 
   @override
-  Widget build(BuildContext context) {
-    providerR=context.read<SkyScrapperProvider>();
-    providerW=context.watch<SkyScrapperProvider>();
-    connectivityHelper.connectivityCheck(context);
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(title: const Text("Sky Scrapper"),
-        actions: [
-          IconButton(onPressed: () {
-            context.read<ThemeProvider>().setTheme();
-          },icon: Icon(context.watch<ThemeProvider>().themeMode)),
-        ],
-        ),
-        body: Stack(
-          children: [
-            Container(
-              height: MediaQuery.sizeOf(context).height,
-              width: MediaQuery.sizeOf(context).width,
-             child:Image.asset("assets/image/background/back.jpg",fit: BoxFit.cover,),
-            ),
-            if(providerW!.skyScrapperModel==null)
-              Center(child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<SkyScrapperProvider>().weatherGetData("Surat");}
 
-                    SearchBar(controller: textEditingController,
-                      hintText: "Search Here Any Place",
-                      onSubmitted: (value) async {
-                       providerR!.weatherGetData(textEditingController.text);
-                        textEditingController.clear();
-                      },
-                      elevation: MaterialStateProperty.all(0.5),trailing: [IconButton(onPressed: () {
-                        providerR!.weatherGetData(textEditingController.text);
-                        textEditingController.clear();
-                      }, icon: const Icon(Icons.search_rounded))],),
-                    const Text("No Data Found"),
-                  ],
-                ),
-              ),)
-           else if(providerW!.skyScrapperModel!=null)
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10,),
-                    SearchBar(controller: textEditingController,
-                      hintText: "Search Here Any Place",
-                      onSubmitted: (value) {
-                        providerR!.weatherGetData(textEditingController.text);
-                        textEditingController.clear();
-                      },
-                      elevation: MaterialStateProperty.all(0.5),trailing: [IconButton(onPressed: () {
-                      providerR!.weatherGetData(textEditingController.text);
-                      textEditingController.clear();
-                    }, icon: const Icon(Icons.search_rounded))],),
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.all(10),
-                                height: MediaQuery.sizeOf(context).height * 0.25,
-                                width: MediaQuery.sizeOf(context).width * 0.42,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: const LinearGradient(
-                                    colors: [Colors.blue, Colors.grey ],
-                                  ),),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Text("id:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                            Text("${providerW!.skyScrapperModel!.weatherList![0].id}"),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Text("Name:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                            Text("${providerW!.skyScrapperModel!.name}"),
-                                           ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Text("Description:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                            Text("${providerW!.skyScrapperModel!.weatherList![0].description}"),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Text("temp:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                            Text("${providerW!.skyScrapperModel!.mainModel!.temp}°C"),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+  @override
+  Widget build(BuildContext context) {
+    providerR = context.read<SkyScrapperProvider>();
+    providerW = context.watch<SkyScrapperProvider>();
+    context.watch<ConnectivityProvider>().onChangedConnectivity();
+    return Scaffold(
+        body: context.watch<ConnectivityProvider>().isConnected
+            ? providerW!.skyScrapperModel!=null?Stack(
+                children: [
+                  Image.asset(
+                    context.watch<ThemeProvider>().bgImage,
+                    height: MediaQuery.sizeOf(context).height,
+                    width: MediaQuery.sizeOf(context).width,
+                    fit: BoxFit.cover,
+                  ),
+                      Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 40, bottom: 5, left: 5, right: 5),
+                            child: SearchBar(
+                              elevation: MaterialStateProperty.all(0.5),
+                              hintText:
+                                  "Enter place name which you want to Search. ",
+                              controller: textEditingController,
+                              onSubmitted: (value) {
+                                providerR!
+                                    .weatherGetData(textEditingController.text);
+                              },
+                              backgroundColor: MaterialStateProperty.all(
+                                  Colors.white.withOpacity(0.5)),
+                              leading: IconButton(
+                                  onPressed: () {
+                                    context.read<ThemeProvider>().setTheme();
+                                  },
+                                  icon: Icon(context
+                                      .watch<ThemeProvider>()
+                                      .themeMode)),
+                              trailing: [
+                                IconButton(
+                                    onPressed: () {
+                                      providerR!.weatherGetData(
+                                          textEditingController.text);
+                                    },
+                                    icon: Icon(Icons.search_rounded))
+                              ],
+                            ),
+                          )),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.2),
                               ),
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.all(10),
-                                height: MediaQuery.sizeOf(context).height * 0.25,
-                                width: MediaQuery.sizeOf(context).width * 0.42,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: const LinearGradient(
-                                    colors: [Colors.blue, Colors.grey ],
-                                  ),
+                              color: Colors.white.withOpacity(0.5)),
+                          child: Center(
+                            child: providerW!.skyScrapperModel!.name!=null?Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  providerW!.skyScrapperModel!.name!,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                child: Column( mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Text("feels_like:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.mainModel!.feels_like}"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text("temp-min:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.mainModel!.temp_min}°C"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text("temp_max:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.mainModel!.temp_max}°C"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text("Pressure:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.mainModel!.pressure}"),
-                                      ],
-                                    ),
-                                  ],
+                                SizedBox(
+                                  height: 2,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  "${providerW!.skyScrapperModel!.mainModel!.temp}°C",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 38,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ):
+                                const Text("Invalid Place", style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 38,
+                                    fontWeight: FontWeight.bold),)
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.all(10),
-                                height: MediaQuery.sizeOf(context).height * 0.25,
-                                width: MediaQuery.sizeOf(context).width * 0.42,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: const LinearGradient(
-                                    colors: [Colors.blue, Colors.grey ],
-                                  ),
-                                ),
-                                child: Column( mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Text("Spped:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.windModel!.speed}KM/H"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text("deg:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.windModel!.deg}"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text("all:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.cloudsModel!.all}"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text("Country:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.sysModel!.country}"),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.all(10),
-                                height: MediaQuery.sizeOf(context).height * 0.25,
-                                width: MediaQuery.sizeOf(context).width * 0.42,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: const LinearGradient(
-                                    colors: [Colors.blue, Colors.grey],
-                                  ),
-                                ),
-                               child: Column( mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Text("Sunrise:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.sysModel!.sunrise}KM/H"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text("Sunset:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.sysModel!.sunset}"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text("main:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.weatherList![0].main}"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text("Cod:",style: TextStyle(fontWeight: FontWeight.bold) ,),
-                                        Text("${providerW!.skyScrapperModel!.cod}"),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: providerW!.skyScrapperModel!.name!=null?
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Today:",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                      "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ):Container()
+                      ),
+                      ],
+              ):Center(child: CircularProgressIndicator(),)
+            : Center(
+                child: Image.asset(
+                  "assets/image/background/no_internet.png",
+                  height: 216,
+                  width: 384,
+                  fit: BoxFit.cover,
                 ),
-              ),
-            )
-            else const Center(child: CircularProgressIndicator(),)
-          ],
-        )
-      ),
-    );
+              ));
   }
 }
