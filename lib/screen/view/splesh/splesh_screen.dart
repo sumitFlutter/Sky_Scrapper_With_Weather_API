@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sky_scrapper_weather_api_project/utils/helpers/connectivity_helper.dart';
+import 'package:provider/provider.dart';
+import 'package:sky_scrapper_weather_api_project/screen/provider/connectivity_provider.dart';
 
 class SpleshScreen extends StatefulWidget {
   const SpleshScreen({super.key});
@@ -13,19 +14,18 @@ class _SpleshScreenState extends State<SpleshScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    context.read<ConnectivityProvider>().first();
     Future.delayed(const Duration(seconds: 3),() => Navigator.pushReplacementNamed(context, "home"),);
   }
   @override
   Widget build(BuildContext context) {
-    ConnectivityHelper connectivityHelper =ConnectivityHelper();
-    connectivityHelper.firstTimeM(context);
     return SafeArea(child: Scaffold(
       body: Stack(
         children: [
           Container(
             height: MediaQuery.sizeOf(context).height,
             width: MediaQuery.sizeOf(context).width,
-            decoration: BoxDecoration(gradient: LinearGradient(colors: [Colors.lightBlue,Colors.purple])),
+            color: Color(0xff87CEEB),
           ),
           Center(child: Column(mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
