@@ -8,7 +8,7 @@ class ThemeProvider with ChangeNotifier{
   IconData themeMode=Icons.dark_mode;
   bool pTheme=false;
   ShareHelper shareHelper=ShareHelper();
-  String bgImage="assets/image/background/light.jpeg";
+  String bgImage="assets/image/background/light.jpg";
   void setTheme()
   async {
     theme=!theme;
@@ -18,19 +18,19 @@ class ThemeProvider with ChangeNotifier{
     {
       mode=ThemeMode.dark;
       themeMode=Icons.light_mode;
-      bgImage="assets/image/background/dark.jpeg";
+      bgImage="assets/image/background/dark.jpg";
     }
     else if(pTheme==false)
     {
       mode=ThemeMode.light;
       themeMode=Icons.dark_mode;
-      bgImage="assets/image/background/light.jpeg";
+      bgImage="assets/image/background/light.jpg";
     }
     else
     {
       mode=ThemeMode.light;
       themeMode=Icons.dark_mode;
-      bgImage="assets/image/background/light.jpeg";
+      bgImage="assets/image/background/light.jpg";
     }
     notifyListeners();
   }
@@ -48,20 +48,20 @@ class ThemeProvider with ChangeNotifier{
     {
       mode=ThemeMode.dark;
       themeMode=Icons.light_mode;
-      bgImage="assets/image/background/dark.jpeg";
+      bgImage="assets/image/background/dark.jpg";
     }
     else if(pTheme==false)
     {
       mode=ThemeMode.light;
       themeMode=Icons.dark_mode;
-      bgImage="assets/image/background/light.jpeg";
+      bgImage="assets/image/background/light.jpg";
 
     }
     else
     {
       mode=ThemeMode.light;
       themeMode=Icons.dark_mode;
-      bgImage="assets/image/background/light.jpeg";
+      bgImage="assets/image/background/light.jpg";
     }
     notifyListeners();
   }
