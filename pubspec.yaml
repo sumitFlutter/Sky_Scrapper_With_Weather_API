@@ -38,7 +38,7 @@ dependencies:
   http: ^1.2.1
   provider: ^6.1.2
   shared_preferences: ^2.2.2
-  connectivity_plus: ^6.0.2
+  connectivity_plus: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +69,7 @@ flutter:
   assets:
     - assets/image/logo/
     - assets/image/background/
+    - assets/image/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

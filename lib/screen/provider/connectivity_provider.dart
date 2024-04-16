@@ -1,17 +1,32 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:sky_scrapper_weather_api_project/utils/helpers/connectivity_helper.dart';
 
 class ConnectivityProvider with ChangeNotifier{
   bool isConnected=false;
-  ConnectivityHelper connectivityHelper =ConnectivityHelper();
   void first()
   async {
-    isConnected=(await connectivityHelper.firstTimeM())!;
-    notifyListeners();
+    ConnectivityResult firstTime = await Connectivity().checkConnectivity();
+    if(firstTime==ConnectivityResult.none)
+    {
+      isConnected=false;
+    }
+    else {
+      isConnected = true;
+    }
+      notifyListeners();
   }
   void onChangedConnectivity()
   {
-    isConnected=connectivityHelper.connectivityCheck()!;
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if(result==ConnectivityResult.none)
+      {
+        isConnected=false;
+      }
+      else{
+        isConnected=true;
+      }
+    });
+
     notifyListeners();
   }
 }
