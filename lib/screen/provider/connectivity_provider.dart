@@ -25,8 +25,9 @@ class ConnectivityProvider with ChangeNotifier{
       else{
         isConnected=true;
       }
+      notifyListeners();
     });
 
-    notifyListeners();
+  
   }
 }
